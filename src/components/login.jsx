@@ -14,7 +14,7 @@ const Login = () => {
     console.log("user email:", email); // log the email in console
 
     try {
-      const response = await fetch('https://news-transfers-production.up.railway.app/enviar-email', {
+      const response = await fetch('https://news-transfers-backend-production.up.railway.app/enviar-email', {
         method: 'POST', //always i need to put post
         headers: {
           'Content-Type': 'application/json',
