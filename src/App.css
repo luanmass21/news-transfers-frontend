@@ -1,54 +1,56 @@
-*{
+* {
   margin: 0;
   padding: 0;
-  font-family: Helvetica;
   box-sizing: border-box;
-   text-shadow: #000 1px 1px; /*dar nitidez melhor para os textos */
+  font-family: Helvetica, sans-serif;
+}
 
+html,
+body,
+#root,
+.App {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .App {
-  display: flex; /*Para alinhar formulário no centro*/
+  display: block;
+}
+
+.teste {
+  color: rgb(255, 0, 81);
+}
+
+.app1 {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center; 
-  min-height: 100vh;
-  background-image: url("assets/imagemFundo.jpg");
-  background-size: cover;
-  background-position: center; /*Para centralizar a imagem*/
-
-
- }
-
- .teste{
-  color: aqua;
- }
-
- .app1 {
-  display: flex; /*Para alinhar formulário no centro*/
-  align-items: center; 
-  justify-content: center;
-  position: fixed;  /* Fixa o Navbar no topo */
-  top: 0;           /* Fixa ele no topo da tela */
-  left: 0;          /* Alinha à esquerda da tela */
-  width: 100%;      /* Ocupa toda a largura da tela */
-  background-color: #333; /* Cor do fundo do Navbar */
-  color: white;     /* Cor do texto */
-  padding: 10px;     /* Espaço dentro do Navbar */
-  z-index: 1000;     /* Garante que o Navbar fique em cima de outros conteúdos */
-  background-color: transparent;    
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+  background-color: transparent;
 }
 
 .app3 {
-  display: flex;             /* Para alinhar o conteúdo no centro */
-  align-items: center;       /* Alinha verticalmente */
-  justify-content: center;   /* Alinha horizontalmente */
-  position: fixed;           /* Fixa o footer na tela */
-  bottom: 0;                 /* Fixa ele no fundo da tela */
-  left: 0;                   /* Alinha à esquerda da tela */
-  width: 100%;               /* Ocupa toda a largura da tela */
-  background-color: transparent;    /* Cor de fundo do Footer */
-  color: white;              /* Cor do texto */
-  padding: 10px;             /* Espaço dentro do Footer */
-  z-index: 1000;             /* Garante que o Footer fique em cima de outros conteúdos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+  background-color: transparent;
 }

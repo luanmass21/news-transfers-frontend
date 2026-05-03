@@ -1,38 +1,55 @@
-import { motion, AnimatePresence } from "framer-motion";
 
-// eslint-disable-next-line react/prop-types
-const MessageAlert = ({ message }) => {
-  if (!message) return null;
 
-  // Detecta a cor baseada no texto
-  let bg = "#22c55e"; // verde (sucesso)
-  // eslint-disable-next-line react/prop-types
-  if (message.toLowerCase().includes("já está cadastrado")) bg = "#eab308"; // amarelo (aviso)
-  // eslint-disable-next-line react/prop-types
-  if (message.toLowerCase().includes("erro")) bg = "#dc2626"; // vermelho (erro)
+import { AnimatePresence, motion } from "framer-motion";
+import PropTypes from "prop-types";
+
+const MessageAlert = ({ message, type }) => {
+  let bg = "transparent";
+  let shadow = "rgba(34, 197, 94, 0.4)";
+
+  if (type === "error") {
+    bg = "#dc2626";
+    shadow = "rgba(220, 38, 38, 0.4)";
+  }
+
+  if (type === "warning") {
+    bg = "#eab308";
+    shadow = "rgba(234, 179, 8, 0.4)";
+  }
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          background: bg,
-          padding: "12px 18px",
-          borderRadius: "10px",
-          marginTop: "15px",
-          color: "#fff",
-          fontWeight: "bold",
-          textAlign: "center",
-          boxShadow: `0 0 12px ${bg}80`,
-        }}
-      >
-        {message}
-      </motion.div>
+    <AnimatePresence mode="wait">
+      {message && (
+        <motion.div
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -20 }}
+  transition={{ duration: 0.3 }}
+  style={{
+    position: "fixed", // ⭐ ESSA LINHA RESOLVE
+    top: "90px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: bg,
+    padding: "12px 20px",
+    borderRadius: "10px",
+    color: "#fff",
+    fontWeight: "600",
+    textAlign: "center",
+    boxShadow: `0 6px 18px ${shadow}`,
+    zIndex: 9999
+  }}
+>
+  {message}
+</motion.div>
+      )}
     </AnimatePresence>
   );
+};
+
+MessageAlert.propTypes = {
+  message: PropTypes.string,
+  type: PropTypes.string,
 };
 
 export default MessageAlert;

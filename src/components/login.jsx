@@ -1,64 +1,128 @@
 import { useState } from "react";
-import '../css/login.css';
-import 'font-awesome/css/font-awesome.min.css';
+import "../css/Login/login.css";
 import MessageAlert from "../components/MessageAlert";
+import { useNavigate } from "react-router-dom";
+import TopBar from "./TopbarLogin";
 
+const usuarios = [
+  {
+    id: 1,
+    nome: "grupo",
+    email: "grupoulbra@gmail.com",
+    senha: "Ulbra123@",
+    cargo: "bibliotecario",
+  },
+];
 
 const Login = () => {
-  const [email, setEmail] = useState(""); // state to store user email
-  const [message, setMessage] = useState(""); // state to store backend message
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [manterConectado, setManterConectado] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [type, setType] = useState("");
+  const navigate = useNavigate();
 
-  // function called when form is submitted
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("user email:", email); // log the email in console
 
-    try {
-      const response = await fetch('https://news-transfers-backend-production.up.railway.app/enviar-email', {
-        method: 'POST', //always i need to put post
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }), // send email in the request body
-      });
+    setLoading(true);
+    setMessage("");
+    setType("");
 
-      const data = await response.json();
-      setMessage(data.message); // show the backend response message
-      // faz a mensagem sumir depois de 3 segundos
-    setTimeout(() => {
-      setMessage("");
-    }, 2000);
+    const usuarioEncontrado = usuarios.find(
+      (usuario) => usuario.email === email && usuario.senha === senha
+    );
 
-    } catch (error) {
-      console.error('error:', error);
-      setMessage("error sending the email."); // show error message if request fails
+    if (!usuarioEncontrado) {
+      setMessage("E-mail ou senha inválidos.");
+      setType("error");
+      setLoading(false);
+      return;
     }
+
+    const user = {
+      id: usuarioEncontrado.id,
+      nome: usuarioEncontrado.nome,
+      email: usuarioEncontrado.email,
+      cargo: usuarioEncontrado.cargo,
+    };
+
+    localStorage.setItem("token", "token-fake-123456");
+    localStorage.setItem("user", JSON.stringify(user));
+
+    setMessage("");
+    setType("success");
+
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/dashboard");
+    }, 700);
   };
 
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit}>
-        <h1>Futebol Semanal</h1>
-        <br />
-        {/* <h3>A newsletter with articles and latest player transfer news around the world.</h3> */}
-        <h3>Um Newsletter com artigos de notícias sobre transferências de futebol ao redor do mundo</h3>
-        <div className="input-field">
-          <i className="fa fa-envelope fa-2x" aria-hidden="true"></i>  
-          <input
+    <div className="login-page">
+      <TopBar />
 
-            type="email"
-            placeholder="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)} // update email in the state
-          />
-        </div>
-        <button type="submit">subscribe</button>
-      
-      <MessageAlert message={message} />
+      <MessageAlert message={message} type={type} />
 
-      </form>
+      <div className="container">
+        <form onSubmit={handleSubmit}>
+          <h2>
+            <img
+              src="https://img.freepik.com/vetores-premium/pilha-de-livros-para-estudantes-icon-ilustracao-em-fundo-branco_134830-290.jpg"
+              width={55}
+              alt="logo"
+            />
+          </h2>
 
+          <h1>BiblioGest</h1>
+          <h3>Sistema de gestão bibliotecária</h3>
+
+          <div className="input-group">
+            <label htmlFor="email">E-mail</label>
+            <div className="input-field">
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="senha">Senha</label>
+            <div className="input-field">
+              <input
+                id="senha"
+                type="password"
+                required
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="remember-me">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={manterConectado}
+                onChange={(e) => setManterConectado(e.target.checked)}
+              />
+              <span>Manter conectado</span>
+            </label>
+          </div>
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar no sistema"}
+          </button>
+
+          <p>Sistema de uso exclusivo para funcionários autorizados</p>
+        </form>
+      </div>
     </div>
   );
 };
