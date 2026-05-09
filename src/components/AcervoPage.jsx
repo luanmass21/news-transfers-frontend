@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/acervo.css";
 
 const AcervoPage = () => {
@@ -9,6 +9,15 @@ const AcervoPage = () => {
     nome: "Usuário",
     email: "email@exemplo.com",
   };
+
+  const [livros, setLivros] = useState(() => {
+    const salvos = localStorage.getItem("acervo");
+    return salvos ? JSON.parse(salvos) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("acervo", JSON.stringify(livros));
+  }, [livros]);
 
   const [form, setForm] = useState({
     titulo: "",
@@ -23,6 +32,29 @@ const AcervoPage = () => {
     form.categoria.trim() &&
     form.situacao.trim();
 
+  const handleSalvarLivro = () => {
+    if (!isFormValid) return;
+
+    const novoLivro = {
+      id: Date.now(),
+      titulo: form.titulo,
+      autor: form.autor,
+      categoria: form.categoria,
+      situacao: form.situacao,
+    };
+
+    setLivros([novoLivro, ...livros]);
+
+    setForm({
+      titulo: "",
+      autor: "",
+      categoria: "",
+      situacao: "Disponível",
+    });
+
+    alert("Livro salvo com sucesso!");
+  };
+
   return (
     <div className="acervo-layout">
       <aside className="sidebar">
@@ -32,25 +64,11 @@ const AcervoPage = () => {
         </div>
 
         <nav className="sidebar-nav">
-          <Link to="/dashboard" className={`nav-item ${location.pathname === "/dashboard" ? "active" : ""}`}>
-            Dashboard
-          </Link>
-
-          <Link to="/leitores" className={`nav-item ${location.pathname === "/leitores" ? "active" : ""}`}>
-            Leitores
-          </Link>
-
-          <Link to="/acervo" className={`nav-item ${location.pathname === "/acervo" ? "active" : ""}`}>
-            Acervo
-          </Link>
-
-          <Link to="/emprestimos" className={`nav-item ${location.pathname === "/emprestimos" ? "active" : ""}`}>
-            Empréstimos
-          </Link>
-
-          <Link to="/devolucoes" className={`nav-item ${location.pathname === "/devolucoes" ? "active" : ""}`}>
-            Devoluções
-          </Link>
+          <Link to="/dashboard" className={`nav-item ${location.pathname === "/dashboard" ? "active" : ""}`}>Dashboard</Link>
+          <Link to="/leitores" className={`nav-item ${location.pathname === "/leitores" ? "active" : ""}`}>Leitores</Link>
+          <Link to="/acervo" className={`nav-item ${location.pathname === "/acervo" ? "active" : ""}`}>Acervo</Link>
+          <Link to="/emprestimos" className={`nav-item ${location.pathname === "/emprestimos" ? "active" : ""}`}>Empréstimos</Link>
+          <Link to="/devolucoes" className={`nav-item ${location.pathname === "/devolucoes" ? "active" : ""}`}>Devoluções</Link>
         </nav>
 
         <div className="sidebar-user">
@@ -96,7 +114,7 @@ const AcervoPage = () => {
 
               <div className="form-group">
                 <label>ISBN</label>
-                <input type="text" defaultValue="" />
+                <input type="text" />
               </div>
             </div>
 
@@ -112,12 +130,12 @@ const AcervoPage = () => {
 
               <div className="form-group">
                 <label>Editora</label>
-                <input type="text" defaultValue="" />
+                <input type="text" />
               </div>
 
               <div className="form-group">
                 <label>Ano de Publicação</label>
-                <input type="text" defaultValue="" />
+                <input type="text" />
               </div>
 
               <div className="form-group">
@@ -129,17 +147,17 @@ const AcervoPage = () => {
             <div className="acervo-grid acervo-grid-3">
               <div className="form-group">
                 <label>Nº de Páginas</label>
-                <input type="text" defaultValue="" />
+                <input type="text" />
               </div>
 
               <div className="form-group">
                 <label>Edição</label>
-                <input type="text" defaultValue="" />
+                <input type="text" />
               </div>
 
               <div className="form-group">
                 <label>Sinopse</label>
-                <input type="text" defaultValue="" />
+                <input type="text" />
               </div>
             </div>
           </section>
@@ -188,7 +206,18 @@ const AcervoPage = () => {
             <span className="required-text">* Campos obrigatórios</span>
 
             <div className="acervo-actions">
-              <button className="btn-secondary" type="button">
+              <button
+                className="btn-secondary"
+                type="button"
+                onClick={() =>
+                  setForm({
+                    titulo: "",
+                    autor: "",
+                    categoria: "",
+                    situacao: "Disponível",
+                  })
+                }
+              >
                 Cancelar
               </button>
 
@@ -196,7 +225,7 @@ const AcervoPage = () => {
                 className="btn-primary"
                 type="button"
                 disabled={!isFormValid}
-                onClick={() => alert("Livro salvo com sucesso!")}
+                onClick={handleSalvarLivro}
               >
                 💾 Salvar Livro
               </button>
